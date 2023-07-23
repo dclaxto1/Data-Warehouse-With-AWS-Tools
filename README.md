@@ -91,30 +91,9 @@ dwh.cfg stores all the information required to connect to S3 and Amazon Redshift
 Scripts (In order of required operation):
 create_table.py will create empty staging, fact and dimension tables in Redshift.
 etl.py will load data from S3 into staging tables on Redshift and then process that data into your analytics tables on Redshift.
+Test_query.ipynb will run a query design to prove data have been successfuly populated in our redshift cluster.
 
-Create a Redshift cluster
-Create a Security Group
-Here, you'll create a security group you will later use to authorize access to your Redshift cluster.
-
-Go to your Amazon EC2 console and under Network and Security in the left navigation pane, select Security Groups.
-Choose the Create Security Group button.
-Enter redshift_security_group for Security group name.
-Enter "authorize redshift cluster access" for Description.
-Select the Inbound tab under Security group rules.
-Click on Add Rule and enter the following values:
-Type: Custom TCP Rule.
-Protocol: TCP.
-Port Range: 5439. (The default port for Amazon Redshift is this one).
-Source: select Custom IP, then type 0.0.0.0/0 or use your Current IP.
-Important: Using 0.0.0.0/0 is not recommended for anything other than demonstration purposes because it allows access from any computer on the internet. In a real environment, you would create inbound rules based on your own network settings.
-Create an IAM Role
-For the cluster to access the S3 bucket, we need to grant it the AmazonS3ReadOnlyAccess policy. This can be achieved by creating a new IAM role called myRedshiftRole with that policy. Follow instructions in Creating an IAM role to proceed.
-
-Start the cluster
-Follow "Getting started with Amazon Redshift: Steps 1-3" at AWS Documentation in order to create a new cluster.
-
-The cluster configuration should match the following:
-
+## Cluster Information:
 Cluster Identifier: redshift-cluster-1
 Type of machine: dc2.large
 Number of compute nodes: 1
@@ -123,10 +102,10 @@ For database configurations:
 Database name: dev
 Database port: 5439
 Master username: awsuser
-Master user password: this_password_is_PRETTY_exposed_123
+Master user password: <example_password123>
 Make sure to add these additional configurations:
 
-Cluster permissions: myRedshiftRole
+Cluster permissions: redshiftAdminIam
 VPC security groups: redshift_security_group
 Publicly accessible: Yes
 Enhanced VPC routing: Disabled
@@ -134,138 +113,50 @@ Leave the rest of the parameters as default.
 
 Starting the cluster takes AWS around 5 minutes by the time this file was written.
 
-WARNING: The cluster that you create will be live, and you will be charged the standard Amazon Redshift usage fees for the cluster until you delete it. Make sure to delete your cluster each time you're finished working to avoid large, unexpected costs for yourself. Also, you can set up Billing Alarms to prevent this from happening.
 
 Add redshift database and IAM role to your cfg file
-Once you have it, you must copy down your cluster endpoint, the ARN for myRedshiftRole, and put them in dwh.cfg.
+Once you have it, you must copy down your cluster endpoint, the ARN for redshiftAdminIam, and put them in dwh.cfg.
 
 It should look as follows:
 
 [CLUSTER]
-HOST = redshift-cluster-1.cnus2ii2liz1.us-west-2.redshift.amazonaws.com <CHANGE THIS WITH YOURS!>
+HOST = redshift-cluster-1.cnus2ii2liz1.us-west-2.redshift.amazonaws.com <insert_yours_here>
 DB_NAME = dev
 DB_USER = awsuser
-DB_PASSWORD = this_password_is_PRETTY_exposed_123
+DB_PASSWORD = <example_password123>
 DB_PORT = 5439
 
 [IAM_ROLE]
-ARN = arn:aws:iam::814165424567:role/myRedshiftRole <CHANGE THIS WITH YOURS!>
+ARN = arn:aws:iam::814165424567:role/myRedshiftRole <insert_yours_here>
 
 [S3]
 LOG_DATA = s3://udacity-dend/log-data
 LOG_JSONPATH = s3://udacity-dend/log_json_path.json
 SONG_DATA = s3://udacity-dend/song_data
-It should look
+It should look similar to this:
+![image](https://github.com/dclaxto1/Data-Warehouse-With-AWS-Tools/assets/128431134/36cff4f9-7185-4825-bb18-6e3394cd58ef)
 
-Create the skeleton of the Data Warehouse
+
+### Create the skeleton of the Data Warehouse
 In this step we will run create_tables.py, which will take around 10 seconds.
 
 This script will create the staging tables and those needed for the star schema.
 
-Load data into the cluster
+### Load data into the cluster
 In this step we will run etl.py, which will take around 10 minutes.
 
 First, the staging tables will be loaded with data extracted from S3. Then, the data in these staging tables will be transformed into the Star Schema.
 
-Verify the content in the database
-Finally, we will run analytics.py, which takes just around 5 seconds.
+### Verify the content in the database
+We will run Test_query.ipynb, which takes just around 5 seconds.
+![image](https://github.com/dclaxto1/Data-Warehouse-With-AWS-Tools/assets/128431134/00c091ec-3633-4a40-80b4-6bcc4acce8c0)
 
-Running:
-SELECT COUNT(*) FROM staging_events
-8056
+This verifies that our ETL process was successful. Our data has been successfully populated in Redshift.
 
-Running:
-SELECT COUNT(*) FROM staging_songs
-14896
-
-Running:
-SELECT COUNT(*) FROM songplays
-333
-
-Running:
-SELECT COUNT(*) FROM users
-104
-
-Running:
-SELECT COUNT(*) FROM songs
-14896
-
-Running:
-SELECT COUNT(*) FROM artists
-10025
-
-Running:
-SELECT COUNT(*) FROM time
-333
-This verifies that our ETL process was successful.
-
-Creating a Billing Alarm to Monitor Your Estimated AWS Charges
-
-FAQ
-Why is it a good idea to build a Data Warehouse in AWS?
-Using the cloud gives us many important advantages over on-premises HW deployments:
-
-Scalability (unlimited capability to expand horizontally).
-Elasticity (rapidly grow and shrink resources).
-Up front costs and the capability to stop paying whenever you want.
-However, the cloud will probably incur in higher operational cost than keeping on-premises HW.
-
-What is Amazon Redshift?
+### What exactly is Amazon Redshift?
 Amazon Redshift is a cloud managed column oriented (MPP) database which consists on a cluster running multiple nodes.
 
 Internally, Amazon Redshift is a modified PostgreSQL with modified extensions for custom columnar storage.
 
 It has useful built-in features, for example, when doing ETL using the COPY command, Redshift performs Automatic Compression Optimization.
 
-MPP
-Most relational databases are capable of executing multiple queries in parallel, but every query is always executed on a single CPU of a single machine.
-
-Massively Parallel Processing databases are capable of parallelizing the execution of one query on multiple CPUs/machines.
-
-This is done by partitioning tables and distributing them in CPUs, processing them in parallel.
-
-mpp
-
-Column-oriented storage
-Columnar storage for database tables is an important factor in optimizing analytic query performance because it drastically reduces the overall disk I/O requirements and reduces the amount of data you need to load from disk.
-
-Column oriented storage is best suited for storing OLAP workloads*.
-
-*Operations primarily focused on read operations which are optimized for analytical and ad hoc queries, including aggregations.
-
-Cluster
-Amazon Redshift consists on a cluster composed of:
-
-One Leader Node:
-
-Coordinates Compute Nodes
-Handles external communication
-Optimizes query execution
-One or more Compute Nodes:
-
-Each of them has its own CPU, memory and disk. (Determined by node type)
-In order to increase cluster capabilities we can either Scale-up (get more powerfull nodes) or Scale-out (get more nodes).
-
-Each Compute Node is logically divided into a number of processing slices. Thus, if a cluster has n slices, it can process n partitions of a table simultaneously
-
-Redshift Cluster
-
-*Open Database Connectivity (ODBC) is a standard application programming interface (API) for accessing database management systems (DBMS) aimed to make it independent of database systems and operating systems.
-
-*Java Database Connectivity (JDBC) is an application programming interface (API) for the programming language Java, which defines how a client may access a database. It is a Java-based data access technology used for Java database connectivity.
-
-What are the costs of running Amazon Redshift?
-It depends on the type of cluster you deploy, ranging from less than 0.25 USD to more than 13 USD an hour.
-
-By the time this project was written, prices in Paris (eu-west-3) were as follows:
-
-vCPU	Memory	Addressable storage capacity	I/O	Price
-Dense Compute DC2					
-dc2.large	2	15 GiB	0.16TB SSD	0.60 GB/s	$0.32 per Hour
-dc2.8xlarge	32	244 GiB	2.56TB SSD	7.50 GB/s	$5.88 per Hour
-Dense Storage DS2					
-ds2.xlarge	4	31 GiB	2TB HDD	0.40 GB/s	$1.00 per Hour
-ds2.8xlarge	36	244 GiB	16TB HDD	3.30 GB/s	$7.98 per Hour
-RA3 with Redshift Managed Storage					
-ra3.4xlarge	12	96 GiB	64TB RMS	2.00 GB/s	$3.795 per Hour
-ra3.16xlarge	48	384 GiB	64TB RMS	8.00 GB/s	$15.18 per Hour
