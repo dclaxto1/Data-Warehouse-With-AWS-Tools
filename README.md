@@ -91,7 +91,7 @@ dwh.cfg stores all the information required to connect to S3 and Amazon Redshift
 Scripts (In order of required operation):
 create_table.py will create empty staging, fact and dimension tables in Redshift.
 etl.py will load data from S3 into staging tables on Redshift and then process that data into your analytics tables on Redshift.
-Test_query.ipynb will run a query design to prove data have been successfuly populated in our redshift cluster.
+Test_query.ipynb will run a query design to prove the data has been successfuly populated in our redshift cluster.
 
 ## Cluster Information:
 Cluster Identifier: redshift-cluster-1
