@@ -11,7 +11,7 @@ Registered AWS account
 #### What is this project about?
 Imagine you have just been hired as a data engineer in a new music streaming startup called Sparkify. The company is constantly growing, and now, they want you to move their processes and data onto the cloud. As their data engineer, you are tasked with building an ETL pipeline that:
 
-Extracts their data from a S3 Bucket
+Extracts their data from a S3 Bucket.
 Stages the data in Redshift.
 Transforms data into a set of dimensional tables using SQL statements.
 This will help their analytics team to continue finding insights in what songs their users are listening to.
