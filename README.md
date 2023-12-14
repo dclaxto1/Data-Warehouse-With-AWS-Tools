@@ -63,7 +63,7 @@ Log data
 
 ## Project Steps
 
-In order to simplify queries and enable fast aggregations, we are going to use the Star Schema using the song and event datasets. These tables will consist on:
+In order to simplify queries and enable fast aggregations, we are going to use the Star Schema using the song and event datasets. These tables will consist of:
 
 1 Fact Table
 
