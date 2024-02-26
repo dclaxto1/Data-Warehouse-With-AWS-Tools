@@ -1,7 +1,7 @@
 # Data-Warehouse-With-AWS-Tools
 ## Implementing a SQL DWH in Amazon's cloud with Amazon Redshift.
 
-Note: Most of the contents in this project are based on Udacity's Data Engineering Nanodegree Program.
+Note: Most of the contents in this project are based on Udacity's Data Engineering Nanodegree Program.  
 
 ### Requirements:
 Basic SQL and Python programming skills
