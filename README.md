@@ -21,7 +21,7 @@ So, in this project you will build an ETL pipeline for a database hosted in Reds
 ### Project Datasets
 The data we are going to use resides in an Amazon S3 bucket. Here are the links for each:
 
-Song data: s3://udacity-dend/song_data
+Song data: s3://udacity-dend/song_data 
 Log data: s3://udacity-dend/log_data
 Log data json path: s3://udacity-dend/log_json_path.json
 
