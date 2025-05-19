@@ -3,7 +3,7 @@
   
 Note: Most of the contents in this project are based on Udacity's Data Engineering Nanodegree Program.  
  
-### Requirements:
+### Requirements:  
 Basic SQL and Python programming skills      
 Registered AWS account
 
