@@ -5,7 +5,7 @@ Note: Most of the contents in this project are based on Udacity's Data Engineeri
  
 ### Requirements:  
 Basic SQL and Python programming skills      
-Registered AWS account
+Registered AWS account  
 
 ### Introduction:
 #### What is this project about?
