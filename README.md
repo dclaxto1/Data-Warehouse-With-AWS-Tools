@@ -7,7 +7,7 @@ Note: Most of the contents in this project are based on Udacity's Data Engineeri
 Basic SQL and Python programming skills          
 Registered AWS account  
 
-### Introduction:
+### Introduction:  
 #### What is this project about?
 Imagine you have just been hired as a data engineer in a new music streaming startup called Sparkify. The company is constantly growing, and now, they want you to move their processes and data onto the cloud. As their data engineer, you are tasked with building an ETL pipeline that:
 
